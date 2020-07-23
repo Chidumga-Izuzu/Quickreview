@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}Books | {{ book.title }}{% endblock %}
+
+{% block body %}
+            Title: {{ book.title }}<br>
+            Author: {{ book.author }}<br>
+            ISBN: {{ book.isbn }}<br>
+            Year: {{ book.year }}<br>
+            {% if goodreadsResult %}<br>
+            Goodreads number of ratings: {{ goodreadsResult.books[0].ratings_count }}<br>
+            Goodreads averge rating: {{ goodreadsResult.books[0].average_rating }}<br>
+            {% endif %}<br>
+            Rate the book:
+            <form action="{{ url_for('book', isbn=book.isbn) }}" method="post">
+                Your review:<br>
+                <textarea name="comment" cols="40" rows="5" value="">{{ user_review.review }}</textarea><br>
+                <select name="rating">
+                    <option value="1" {% if user_review.review_numb == 1 %}selected="selected"{% endif %}>1</option>
+                    <option value="2" {% if user_review.review_numb == 2 %}selected="selected"{% endif %}>2</option>
+                    <option value="3" {% if user_review.review_numb == 3 %}selected="selected"{% endif %}>3</option>
+                    <option value="4" {% if user_review.review_numb == 4 %}selected="selected"{% endif %}>4</option>
+                    <option value="5" {% if user_review.review_numb == 5 %}selected="selected"{% endif %}>5</option>
+                </select>
+                {% if user_review %}<input type="submit" name="update" value="Update"><input type="submit" name="delete" value="Delete">{% else %}<input type="submit" name="add" value="Submit">{% endif %}
+            </form>
+            {% if user_review %}<br>
+            Your current review:
+                <ul>
+                {% if user_review.review!="" %}{{ user_review.review }}<br>{% endif %}
+                <i>Rated {{ user_review.review_numb }}/5</i>
+                </ul>
+            {% endif %}{% if review_check %}<br>
+            Other reviews:{% for comment in review_check %}
+                <ul>
+                {% if comment.review!="" %}{{ comment.review }}<br>{% endif %}
+                <i>Rated {{ comment.review_numb }}/5 by {{ comment.getUsername() }}</i>
+                </ul>{% endfor %}{% endif %}
+{% endblock %}
