@@ -5,17 +5,13 @@ from flask import json, jsonify
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 from sqlalchemy import or_, and_
 from sqlalchemy import join
-from sqlalchemy import create_engine
-from sqlalchemy import text
 from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.orm.session import sessionmaker
 from wtforms_fields import *
 from models import *
 
 # Configure App
 
 app = Flask(__name__)
-
 app.secret_key = 'secret'
 
 #configure database
@@ -137,40 +133,49 @@ def book(isbn):
 
 
     if res.status_code == 200:
-        goodreadsResult = res.json()
-        return render_template("results.html", book=book, goodreadsResult=goodreadsResult, review_check=review_check, user_review=user_review)
+        goodreads_Result = res.json()
+        return render_template("results.html", book=book, goodreads_Result=goodreads_Result, review_check=review_check, user_review=user_review)
     return render_template("results.html", book=book, review_check=review_check, user_review=user_review)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-@app.route("/api/<string:isbn>")
+@app.route("/api/<isbn>", methods=['GET', 'POST'])
+@login_required
 def api(isbn):
-    # Make sure isbn exists
-    book = Book.query.filter_by(isbn=isbn).first()
+
+    book =Book.query.get(isbn)
     if book is None:
-        return render_template("error.html", message="404 Book not found"), 404
-    return render_template("api.html", book=book)
+        return jsonify({"error": "Invalid Book ISBN"}), 404
+
+    res = requests.get("https://www.goodreads.com/book/review_counts.json",
+                       params={"key": "KGJIBaI7CKEgWvsELMOITA", "isbns": isbn})
+
+    if res.status_code == 404:
+        ratings_count = "Ratings Not Available"
+        ratings_count = "Ratings Not Available"
+    else:
+        goodreads= res.json()
+        for i in goodreads["books"]:
+            ratings_count = i["ratings_count"]
+            average_rating = i["average_rating"]
+
+    return jsonify({
 
 
+        "isbn": book.isbn,
+        "title": book.title,
+        "author": book.author,
+        "year": book.year,
+        "ratings_count": ratings_count,
+        "average_rating": average_rating
+    })
 
 
 
 
 @app.route("/logout", methods=['GET'])
+@login_required
 def logout():
     logout_user()
-    return "User logged out!"
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
 

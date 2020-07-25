@@ -27,30 +27,6 @@ class Book(db.Model):
     author = db.Column(db.String(), nullable=False)
     year = db.Column(db.Integer, nullable=False)
 
-# Returns information about the book in JSON format
-    def toJson(self):
-        return {
-            "title": self.title,
-            "author": self.author,
-            "year": self.year,
-            "isbn": self.isbn,
-            "review_count": self.getReviewsnumb(),
-            "average_score": self.getReviewsAvg(),
-        }
-
-    def getReviewsnumb(self):
-        return len(Review.query.filter_by(isbn=self.isbn).all())
-
-    # Get average review rating for the book (returns 0.0 if no reviews)
-    def getReviewsAvg(self):
-        reviewer = Review.query.filter_by(isbn=self.book_id).with_entities(Review.review_numb).all()
-        reviewer = [r for r, in reviewer]
-        if reviewer:
-            return sum(reviewer) / len(reviewer)
-        else:
-            return 0.0
-
-
 class Review(db.Model):
     """ reviews model """
 

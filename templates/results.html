@@ -1,18 +1,71 @@
 {% extends "layout.html" %}
 
+{% block heading %}
+
+<style>
+
+
+  input[type=submit]{
+    background-color: black;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  border-radius: 50%;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  }
+
+
+
+
+h1 {
+  text-align: center;
+  font-family: serif;
+  font-weight: normal;
+  text-transform: uppercase;
+  border-bottom: 1px solid #57b1dc;
+  margin-top: 30px;
+}
+
+h5 {
+  color: #003366;
+  padding: 5px;
+  font-size: em;
+}
+
+</style>
+{% endblock %}
+
 {% block title %}Books | {{ book.title }}{% endblock %}
 
 {% block body %}
-            Title: {{ book.title }}<br>
-            Author: {{ book.author }}<br>
-            ISBN: {{ book.isbn }}<br>
-            Year: {{ book.year }}<br>
-            {% if goodreadsResult %}<br>
-            Goodreads number of ratings: {{ goodreadsResult.books[0].ratings_count }}<br>
-            Goodreads averge rating: {{ goodreadsResult.books[0].average_rating }}<br>
-            {% endif %}<br>
-            Rate the book:
+<div class="jumbotron">
+  <div class="row">
+
+    <div class="col-xs-3 col-md-3 col-sm-3">
+      <img src="http://covers.openlibrary.org/b/isbn/{{book['isbn']}}-M.jpg" onerror="if (this.src != '../images/noimgavailable.jpg') this.src = '../images/noimgavailable.jpg';">
+    </div>
+
+
+ <div>
+<h1> Title: {{book.title}} </h1>
+<h5> Author : {{ book.author }} </h5>
+<h5> ISBN: {{ book.isbn }} </h5>
+<h5> Year: {{ book.year }} </h5>
+{% if goodreads_Result %}
+<h5> Total Ratings on Goodreads: {{ goodreads_Result.books[0].ratings_count }} </h5>
+<h5> Average rating on Goodreads: {{ goodreads_Result.books[0].average_rating }} </h5>
+<h5>
+    <a href="https://www.goodreads.com/search?q={{book.title}}" target="_blank">Visit Goodreads page</a>
+</h5>
+{% endif %}<br>
+
             <form action="{{ url_for('book', isbn=book.isbn) }}" method="post">
+
+
+
                 Your review:<br>
                 <textarea name="comment" cols="40" rows="5" value="">{{ user_review.review }}</textarea><br>
                 <select name="rating">
@@ -36,4 +89,6 @@
                 {% if comment.review!="" %}{{ comment.review }}<br>{% endif %}
                 <i>Rated {{ comment.review_numb }}/5 by {{ comment.getUsername() }}</i>
                 </ul>{% endfor %}{% endif %}
+
+
 {% endblock %}

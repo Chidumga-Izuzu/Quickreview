@@ -4,7 +4,15 @@
 
 {% block title %} CS50 Project 1! {% endblock %}
 {% block body %}
-<h1>Welcome to Project 1 OF CS50</h1>
+<style>
+body {
+  background-image: url('../static/images/books3.jpeg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+</style>
+<h1>Project 1 Of Harvard CS50</h1>
 
 <form action="{{ url_for('index') }}", method="POST">
     {{ displayField(form.username, 'Username', autocomplete="off", autofocus=true) }}
@@ -16,6 +24,6 @@
     {{ form.csrf_token }}
 </form>
 
-  <p style="color: black;">Already have an account? <a href="{{ url_for('login') }}">Sign in</a>.</p>
+  <p style="color: red;">Already have an account? <a href="{{ url_for('login') }}">Sign in</a>.</p>
 
 {% endblock %}
