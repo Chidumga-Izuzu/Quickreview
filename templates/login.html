@@ -7,8 +7,29 @@
 
 {% block body %}
 
-<h2>Login to Account!</h2>
-<p> Enter your password to search/drop a review! </p>
+<style>
+body {
+  background-image: url('../static/images/books8.jpeg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+
+}
+
+  a{
+    color: black;
+    text-decoration: none;
+   background-color: transparent;
+}
+
+mark {
+  background: white;
+  color: #003366;
+}
+</style>
+
+<h2 style="color: #003366; font-weight:700; font-family: Charcoal"> <mark>Login to Account!</mark></h2>
+<p style="color: white; font-weight:bold; font-family: Charcoal; margin-top: 25px"><mark>Login to search/drop a review!</mark> </p>
 
 <form action="{{ url_for('login')}}" method="POST">
   {{ displayField(form.username, 'Username', autocomplete="off", autofocus=true) }}
@@ -21,7 +42,7 @@
 
 </form>
 
-<p style="color:green"> Not a member? <a href="{{url_for('index')}}"> click here to join</a> </p>
+<p style="color:black; font-weight:bold; font-family: Charcoal; margin-top: 25px"> <mark>Not A Member? </mark><a href="{{url_for('index')}}"> <mark>Click here to join</mark></a> </p>
 
 
 {% endblock %}

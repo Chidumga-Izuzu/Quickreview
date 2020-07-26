@@ -117,9 +117,9 @@ def book(isbn):
                 review_check.review_numb = rating
             db.session.commit()
 
-        elif "delete" in request.form:
+        elif "remove" in request.form:
             review_check = Review.query.filter(and_(Review.isbn==isbn, Review.username==current_user.username)).first()
-            db.session.delete(review_check)
+            db.session.remove(review_check)
             db.session.commit()
 
     review_check = Review.query.filter(Review.isbn==isbn).all()

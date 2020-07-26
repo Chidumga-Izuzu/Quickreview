@@ -5,7 +5,26 @@
 {% endblock %}
 
 {% block body %}
-  <center><h1 class="m-5">Search for a book:</h1></center>
+
+<style>
+body {
+  background-image: url('../static/images/books.jpeg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+
+}
+
+mark {
+  background: white;
+  color: #003366;
+}
+
+</style>
+
+
+
+  <center><h1 style="color: white; font-weight:700" class="m-5"><mark>Search for a book:</mark></h1></center>
   <form action="/search" method="post">
     <div class="form-group">
         <input autocomplete="off" autofocus class="form-control" name="title" placeholder= "Title of book" type="text">
